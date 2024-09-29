@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World Population Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShIkiQLaIlRV1FuI0kvZ1EprorfP9zUMiwVA&s'); /* Add your background image URL */
+            background-size: cover; /* Cover the entire viewport */
+            background-position: center; /* Center the background image */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #343a40;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.9); /* White background with transparency */
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            width: 400px; /* Set a specific width for the container */
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 28px; /* Slightly larger font size for the heading */
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block; /* Block display for labels */
+            margin-bottom: 5px; /* Space between label and input */
+            font-size: 16px; /* Font size for labels */
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px; /* Padding for input fields */
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            font-size: 16px; /* Font size for inputs */
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* Inner shadow for depth */
+        }
+
+        .btn {
+            background-color: #007bff;
+            color: white;
+            padding: 12px; /* Padding for button */
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px; /* Font size for button */
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        #predictionResult {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 16px; /* Font size for results */
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>World Population Prediction</h1>
+    <form id="predictionForm">
+        <div class="form-group">
+            <label for="country">Country:</label>
+            <input type="text" class="form-control" id="country" placeholder="Enter country name" required>
+        </div>
+        <div class="form-group">
+            <label for="year">Future Year:</label>
+            <input type="number" class="form-control" id="year" placeholder="Enter future year" required>
+        </div>
+        <button type="submit" class="btn">Predict</button>
+    </form>
+
+    <div id="predictionResult">
+        <!-- Result will be displayed here -->
+    </div>
+</div>
+
+<script>
+    document.getElementById("predictionForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+        
+        let country = document.getElementById("country").value;
+        let year = document.getElementById("year").value;
+
+        fetch('/predict', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ country: country, year: year })
+        })
+            .then(response => response.json())
+            .then(data => {
+                let resultDiv = document.getElementById("predictionResult");
+                resultDiv.innerHTML = `<h4>Prediction Results:</h4>
+                                       <p><strong>Predicted Growth Rate:</strong> ${data.predicted_growth} %</p>
+                                       <p><strong>Predicted Population:</strong> ${data.predicted_population}</p>`;
+            })
+            .catch(error => console.error('Error:', error));
+    });
+</script>
+
+</body>
+</html>
